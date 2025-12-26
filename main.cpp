@@ -178,7 +178,7 @@ int main() {
         cout << "Coups restants : " << NbCoupsMax - nbCoups << endl;
         cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,A,S,E) :" << endl;
 
-        cin >> pos.ord >> pos.abs >> direction;//sasit position et direction
+        cin >> pos.ord >> pos.abs >> direction;//saisit position et direction
 
         makeAMove(grid, pos, direction); 
         nbCoups++;
