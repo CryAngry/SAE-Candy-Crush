@@ -34,12 +34,27 @@ void couleur (const unsigned & coul) {
     cout << "\033[" << coul <<"m";
 }
 
+bool combin(const mat & grid, size_t i, size_t j , unsigned val){
+    
+    if (j >= 2 && grid[i][j-1] == val && grid[i][j-2] == val) return true;
+
+    if (i >= 2 && grid[i-1][j] == val && grid[i-2][j] == val) return true;
+
+    return false;
+}
+
+
+
 void initGrid (mat & grid, const size_t & matSize) {
     grid.resize (matSize);
     for (size_t i = 0; i < matSize; ++i) {
         grid[i].resize (matSize);
         for (size_t j = 0; j < matSize; ++j) {
-            grid[i][j] = rand() % KNbCandies + 1;
+            unsigned val;
+            do{
+                val = rand() % KNbCandies + 1;
+            } while(combin(grid, i, j , val));
+            grid[i][j] = val;
         }
     }
 }
@@ -161,7 +176,7 @@ int main() {
 
     srand(time(NULL));
     mat grid;
-    const size_t tailleGrille = 10;
+    const size_t tailleGrille = 8;
     initGrid(grid, tailleGrille);
 
     const unsigned NbCoupsMax = 20; // Nombre de coups max
@@ -176,7 +191,7 @@ int main() {
         displayGrid(grid); //affiche la grille et menu 
         cout << "Score : " << score << endl;
         cout << "Coups restants : " << NbCoupsMax - nbCoups << endl;
-        cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,A,S,E) :" << endl;
+        cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,Q,S,D) :" << endl;
 
         cin >> pos.ord >> pos.abs >> direction;//saisit position et direction
 
