@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// Un chercheur en cryptographie travaillait depuis des années sur un projet classé secret, un programme capable de dissimuler des informations dans des structures apparemment anodines. Avant de partir en mission, il laissa derrière lui un étrange fichier : une version modifiée d’un jeu de bonbons colorés. À première vue, cela ressemblait à un simple divertissement, mais en l’ouvrant, on comprenait vite que ce n’était pas un jeu ordinaire. Le chercheur avait dissimulé son identité dans huit lettres codées en ROT13, chacune libérée uniquement lorsqu’une combinaison rare était réalisée. Comme s’il avait volontairement fragmenté son nom pour le protéger, il avait transformé son ultime message en un puzzle que seuls les plus persévérants pourraient résoudre. Sur la première page du dossier qu’il avait laissé, une phrase manuscrite résumait tout : « Si tu lis ceci, c’est que tu es digne de connaître mon nom. » À mesure que les lettres apparaissent, le joueur se rapproche de la vérité, découvrant peu à peu l’héritage du chercheur disparu. Et lorsque les huit fragments sont enfin réunis, son nom se révèle, comme la clé d’un secret plus vaste encore.
+
 typedef vector<unsigned> line;
 typedef vector<line> mat;
 
