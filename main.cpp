@@ -152,13 +152,14 @@ bool atLeastThreeInARow (const mat & grid, maPosition & pos, unsigned & howMany)
 void removalInColumn (mat & grid, const maPosition & pos, unsigned howMany) {
     size_t taille = grid.size();
     size_t col = pos.abs;
+    size_t lig = pos.ord;
 
     for (size_t i = pos.ord; i < taille - howMany; ++i) {
-        grid[i][col] = grid[i + howMany][col];
+        grid[lig][col] = grid[i + howMany][col];
     }
 
     for (size_t i = taille - howMany; i < taille; ++i) {
-        grid[i][col] = KImpossible;
+        grid[lig][col] = rand() % KNbCandies + 1;
     }
 }
 

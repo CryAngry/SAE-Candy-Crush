@@ -46,6 +46,22 @@ vector<string> indices = {
 // Suivi des lettres trouvées
 vector<bool> indicesTrouves(indices.size(), false);
 
+const unsigned KReset   (0);
+const unsigned KNoir    (30);
+const unsigned KRouge   (31);
+const unsigned KVert    (32);
+const unsigned KJaune   (33);
+const unsigned KBleu    (34);
+const unsigned KMAgenta (35);
+const unsigned KCyan    (36);
+
+
+
+
+void couleur (const unsigned & coul) {
+    cout << "\033[" << coul <<"m";
+}
+
 void clearScreen () {
     cout << "\033[H\033[2J";
 }
@@ -71,10 +87,19 @@ void initGrid (mat & grid, const size_t & matSize) {
 }
 
 void displayGrid (const mat & grid) {
+    const size_t matSize = grid.size();
     clearScreen();
-    for (size_t i = 0; i < grid.size(); ++i) {
-        for (size_t j = 0; j < grid.size(); ++j) {
-            cout << grid[i][j] << " ";
+    cout << "\033[0m"; 
+
+    for (size_t i = 0; i < matSize; ++i) {
+        for (size_t j = 0; j < matSize; ++j) {
+            if (grid[i][j] >= 1 && grid[i][j] <= KNbCandies) {
+                couleur(30 + grid[i][j]);
+                cout << grid[i][j] << " ";
+                couleur(KReset);
+            } else {
+                cout << "  ";
+            }
         }
         cout << endl;
     }
@@ -135,7 +160,7 @@ void removalInColumn (mat & grid, const maPosition & pos, unsigned howMany) {
     for (size_t i = pos.ord; i < grid.size() - howMany; ++i)
         grid[i][col] = grid[i + howMany][col];
     for (size_t i = grid.size() - howMany; i < grid.size(); ++i)
-        grid[i][col] = KImpossible;
+        grid[i][col] = rand() % KNbCandies + 1;
 }
 
 void removalInRow (mat & grid, const maPosition & pos, unsigned howMany) {
