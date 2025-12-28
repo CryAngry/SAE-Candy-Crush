@@ -75,11 +75,11 @@ bool makeAMove (mat & grid, const maPosition & pos, const char & direction){
         if (pos.ord < grid.size() - 1) newPos.ord += 1;
         else return false;
     }
-    else if (direction == 'A') {
+    else if (direction == 'Q') {
         if (pos.abs > 0) newPos.abs -= 1;
         else return false;
     }
-    else if (direction == 'E') {
+    else if (direction == 'D') {
         if (pos.abs < grid.size() - 1) newPos.abs += 1;
         else return false;
     }
@@ -194,7 +194,7 @@ int main() {
 
         bool coupValide = false;
         while (!coupValide) {
-            cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,A,S,E) :" << endl;
+            cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,S,Q,D) :" << endl;
             cin >> pos.ord >> pos.abs >> direction;
 
             if (makeAMove(grid, pos, direction)) {
