@@ -189,16 +189,15 @@ void removalInColumn(mat &grid, const maPosition &pos, unsigned howMany)
 {
     size_t taille = grid.size();
     size_t col = pos.abs;
-    size_t lig = pos.ord;
 
     for (size_t i = pos.ord; i < taille - howMany; ++i)
     {
-        grid[lig][col] = grid[i + howMany][col];
+        grid[i][col] = grid[i + howMany][col];
     }
 
     for (size_t i = taille - howMany; i < taille; ++i)
     {
-        grid[lig][col] = rand() % KNbCandies + 1;
+        grid[i][col] = rand() % KNbCandies + 1;
     }
 }
 
@@ -235,10 +234,16 @@ int main()
         displayGrid(grid); // affiche la grille et menu
         cout << "Score : " << score << endl;
         cout << "Coups restants : " << NbCoupsMax - nbCoups << endl;
-        cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,Q,S,D) :" << endl;
+        cout << "Entrez Ligne (0-7), Colonne (0-7) et Direction (Z,Q,S,D) :" << endl;
 
-        cin >> pos.ord >> pos.abs >> direction; // saisit position et direction
+        cin >> pos.ord >> pos.abs >> direction;// saisit position et direction
 
+        if (pos.ord >= tailleGrille || pos.abs >= tailleGrille ||
+            (direction != 'Z' && direction != 'S' && direction != 'Q' && direction != 'D'))
+        {
+            cout << "Mauvaise saisie ! Reessayez." << endl;
+            continue;
+        }
         makeAMove(grid, pos, direction);
 
         maPosition testPos;
@@ -246,7 +251,7 @@ int main()
 
         if (atLeastThreeInARow(grid, testPos, testCount) || atLeastThreeInAColumn(grid, testPos, testCount))
         {
-            nbCoups++;
+            ++nbCoups;
             bool suiteTrouvee = true;
             while (suiteTrouvee)
             {
@@ -277,12 +282,12 @@ int main()
         }
     }
 
-        // fin de la partie
-        displayGrid(grid);
-        cout << "PARTIE TERMINEE !" << endl;
-        cout << "Votre score final est de : " << score << endl;
+    // fin de la partie
+    displayGrid(grid);
+    cout << "PARTIE TERMINEE !" << endl;
+    cout << "Votre score final est de : " << score << endl;
 
-        return 0;
+    return 0;
 
-    }
+}
 
