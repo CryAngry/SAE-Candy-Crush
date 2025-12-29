@@ -6,71 +6,85 @@
 
 using namespace std;
 
-typedef vector <unsigned> line;
-typedef vector <line> mat;
+typedef vector<unsigned> line;
+typedef vector<line> mat;
 
-struct maPosition { 
+struct maPosition
+{
     unsigned abs;
     unsigned ord;
 };
 
-const unsigned KReset   (0);
-const unsigned KNoir    (30);
-const unsigned KRouge   (31);
-const unsigned KVert    (32);
-const unsigned KJaune   (33);
-const unsigned KBleu    (34);
-const unsigned KMAgenta (35);
-const unsigned KCyan    (36);
+const unsigned KReset(0);
+const unsigned KNoir(30);
+const unsigned KRouge(31);
+const unsigned KVert(32);
+const unsigned KJaune(33);
+const unsigned KBleu(34);
+const unsigned KMAgenta(35);
+const unsigned KCyan(36);
 
 const unsigned KNbCandies = 4;
 const unsigned KImpossible = 0;
 
-void clearScreen () {
+void clearScreen()
+{
     cout << "\033[H\033[2J";
 }
-     
-void couleur (const unsigned & coul) {
-    cout << "\033[" << coul <<"m";
+
+void couleur(const unsigned &coul)
+{
+    cout << "\033[" << coul << "m";
 }
 
-bool combin(const mat & grid, size_t i, size_t j , unsigned val){
-    
-    if (j >= 2 && grid[i][j-1] == val && grid[i][j-2] == val) return true;
+bool combin(const mat &grid, size_t i, size_t j, unsigned val)
+{
 
-    if (i >= 2 && grid[i-1][j] == val && grid[i-2][j] == val) return true;
+    if (j >= 2 && grid[i][j - 1] == val && grid[i][j - 2] == val)
+        return true;
+
+    if (i >= 2 && grid[i - 1][j] == val && grid[i - 2][j] == val)
+        return true;
 
     return false;
 }
 
-
-
-void initGrid (mat & grid, const size_t & matSize) {
-    grid.resize (matSize);
-    for (size_t i = 0; i < matSize; ++i) {
-        grid[i].resize (matSize);
-        for (size_t j = 0; j < matSize; ++j) {
+void initGrid(mat &grid, const size_t &matSize)
+{
+    grid.resize(matSize);
+    for (size_t i = 0; i < matSize; ++i)
+    {
+        grid[i].resize(matSize);
+        for (size_t j = 0; j < matSize; ++j)
+        {
             unsigned val;
-            do{
+            do
+            {
                 val = rand() % KNbCandies + 1;
-            } while(combin(grid, i, j , val));
+            } while (combin(grid, i, j, val));
             grid[i][j] = val;
         }
     }
 }
 
-void displayGrid (const mat & grid) {
+void displayGrid(const mat &grid)
+{
     const size_t matSize = grid.size();
     clearScreen();
-    cout << "\033[0m"; 
+    cout << "\033[0m";
 
-    for (size_t i = 0; i < matSize; ++i) {
-        for (size_t j = 0; j < matSize; ++j) {
-            if (grid[i][j] >= 1 && grid[i][j] <= KNbCandies) {
+    for (size_t i = 0; i < matSize; ++i)
+    {
+        for (size_t j = 0; j < matSize; ++j)
+        {
+            if (grid[i][j] >= 1 && grid[i][j] <= KNbCandies)
+            {
                 couleur(30 + grid[i][j]);
                 cout << grid[i][j] << " ";
                 couleur(KReset);
-            } else {
+            }
+            else
+            {
                 cout << "  ";
             }
         }
@@ -78,44 +92,60 @@ void displayGrid (const mat & grid) {
     }
 }
 
-void makeAMove (mat & grid, const maPosition & pos, const char & direction){
+void makeAMove(mat &grid, const maPosition &pos, const char &direction)
+{
     maPosition newPos = pos;
 
-    if (direction == 'Z') {
-        if (pos.ord > 0) newPos.ord -= 1;
+    if (direction == 'Z')
+    {
+        if (pos.ord > 0)
+            newPos.ord -= 1;
     }
-    else if (direction == 'S') {
-        if (pos.ord < grid.size() - 1) newPos.ord += 1;
+    else if (direction == 'S')
+    {
+        if (pos.ord < grid.size() - 1)
+            newPos.ord += 1;
     }
-    else if (direction == 'Q') {
-        if (pos.abs > 0) newPos.abs -= 1;
+    else if (direction == 'Q')
+    {
+        if (pos.abs > 0)
+            newPos.abs -= 1;
     }
-    else if (direction == 'D') {
-        if (pos.abs < grid.size() - 1) newPos.abs += 1;
+    else if (direction == 'D')
+    {
+        if (pos.abs < grid.size() - 1)
+            newPos.abs += 1;
     }
-    else {
-        return; 
+    else
+    {
+        return;
     }
-    swap (grid[pos.ord][pos.abs], grid[newPos.ord][newPos.abs]);
+    swap(grid[pos.ord][pos.abs], grid[newPos.ord][newPos.abs]);
 }
 
-bool atLeastThreeInAColumn (const mat & grid, maPosition & pos, unsigned & howMany) {
+bool atLeastThreeInAColumn(const mat &grid, maPosition &pos, unsigned &howMany)
+{
     const size_t matSize = grid.size();
 
-    for (size_t j = 0; j < matSize; ++j) {
-        for (size_t i = 0; i < matSize; ++i) {
-            
-            if (grid[i][j] != 0) {
+    for (size_t j = 0; j < matSize; ++j)
+    {
+        for (size_t i = 0; i < matSize; ++i)
+        {
+
+            if (grid[i][j] != 0)
+            {
                 unsigned count = 1;
-                
-                while (i + count < matSize && grid[i + count][j] == grid[i][j]) {
+
+                while (i + count < matSize && grid[i + count][j] == grid[i][j])
+                {
                     count++;
                 }
 
-                if (count >= 3) {
-                    pos.ord = i;      
-                    pos.abs = j;      
-                    howMany = count;  
+                if (count >= 3)
+                {
+                    pos.ord = i;
+                    pos.abs = j;
+                    howMany = count;
                     return true;
                 }
             }
@@ -124,23 +154,29 @@ bool atLeastThreeInAColumn (const mat & grid, maPosition & pos, unsigned & howMa
     return false;
 }
 
-bool atLeastThreeInARow (const mat & grid, maPosition & pos, unsigned & howMany) {
+bool atLeastThreeInARow(const mat &grid, maPosition &pos, unsigned &howMany)
+{
     const size_t matSize = grid.size();
 
-    for (size_t i = 0; i < matSize; ++i) {
-        for (size_t j = 0; j < matSize; ++j) {
-            
-            if (grid[i][j] != 0) {
+    for (size_t i = 0; i < matSize; ++i)
+    {
+        for (size_t j = 0; j < matSize; ++j)
+        {
+
+            if (grid[i][j] != 0)
+            {
                 unsigned count = 1;
-                
-                while (j + count < matSize && grid[i][j+count] == grid[i][j]) {
+
+                while (j + count < matSize && grid[i][j + count] == grid[i][j])
+                {
                     count++;
                 }
 
-                if (count >= 3) {
-                    pos.ord = i;      
-                    pos.abs = j;      
-                    howMany = count;  
+                if (count >= 3)
+                {
+                    pos.ord = i;
+                    pos.abs = j;
+                    howMany = count;
                     return true;
                 }
             }
@@ -149,31 +185,37 @@ bool atLeastThreeInARow (const mat & grid, maPosition & pos, unsigned & howMany)
     return false;
 }
 
-void removalInColumn (mat & grid, const maPosition & pos, unsigned howMany) {
+void removalInColumn(mat &grid, const maPosition &pos, unsigned howMany)
+{
     size_t taille = grid.size();
     size_t col = pos.abs;
     size_t lig = pos.ord;
 
-    for (size_t i = pos.ord; i < taille - howMany; ++i) {
+    for (size_t i = pos.ord; i < taille - howMany; ++i)
+    {
         grid[lig][col] = grid[i + howMany][col];
     }
 
-    for (size_t i = taille - howMany; i < taille; ++i) {
+    for (size_t i = taille - howMany; i < taille; ++i)
+    {
         grid[lig][col] = rand() % KNbCandies + 1;
     }
 }
 
-void removalInRow (mat & grid, const maPosition & pos, unsigned howMany) {
-    for (unsigned k = 0; k < howMany; ++k) {
+void removalInRow(mat &grid, const maPosition &pos, unsigned howMany)
+{
+    for (unsigned k = 0; k < howMany; ++k)
+    {
         maPosition currentPos;
         currentPos.ord = pos.ord;
-        currentPos.abs = pos.abs + k; 
+        currentPos.abs = pos.abs + k;
 
         removalInColumn(grid, currentPos, 1);
     }
 }
 
-int main() {
+int main()
+{
 
     srand(time(NULL));
     mat grid;
@@ -187,45 +229,60 @@ int main() {
     maPosition pos;
     char direction;
 
-    //Tant que coupmax non atteints
-    while (nbCoups < NbCoupsMax) {
-        displayGrid(grid); //affiche la grille et menu 
+    // Tant que coupmax non atteints
+    while (nbCoups < NbCoupsMax)
+    {
+        displayGrid(grid); // affiche la grille et menu
         cout << "Score : " << score << endl;
         cout << "Coups restants : " << NbCoupsMax - nbCoups << endl;
         cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,Q,S,D) :" << endl;
 
-        cin >> pos.ord >> pos.abs >> direction;//saisit position et direction
+        cin >> pos.ord >> pos.abs >> direction; // saisit position et direction
 
-        makeAMove(grid, pos, direction); 
-        nbCoups++;
+        makeAMove(grid, pos, direction);
 
-        bool suiteTrouvee = true;
-        while(suiteTrouvee){
-            suiteTrouvee = false; //on part du principe qu'il y a plus rien
-            unsigned howMany;
-            maPosition detectPos;
+        maPosition testPos;
+        unsigned testCount;
 
-            if (atLeastThreeInARow(grid, detectPos, howMany)) {
-                removalInRow(grid, detectPos, howMany);
-                score += howMany;
-                suiteTrouvee = true; //apres modif, faut la var
+        if (atLeastThreeInARow(grid, testPos, testCount) || atLeastThreeInAColumn(grid, testPos, testCount))
+        {
+            nbCoups++;
+            bool suiteTrouvee = true;
+            while (suiteTrouvee)
+            {
+                suiteTrouvee = false;
+                unsigned howMany;
+                maPosition detectPos;
+
+                if (atLeastThreeInARow(grid, detectPos, howMany))
+                {
+                    removalInRow(grid, detectPos, howMany);
+                    score += howMany;
+                    suiteTrouvee = true;
+                }
+
+                if (atLeastThreeInAColumn(grid, detectPos, howMany))
+                {
+                    removalInColumn(grid, detectPos, howMany);
+                    score += howMany;
+                    suiteTrouvee = true;
+                }
             }
-
-            if (atLeastThreeInAColumn(grid, detectPos, howMany)) {
-                removalInColumn(grid, detectPos, howMany);
-                score += howMany;
-                suiteTrouvee = true; 
-            }
+        }
+        else
+        {
+            makeAMove(grid, pos, direction);
+            ++nbCoups;
 
         }
+    }
+
+        // fin de la partie
+        displayGrid(grid);
+        cout << "PARTIE TERMINEE !" << endl;
+        cout << "Votre score final est de : " << score << endl;
+
+        return 0;
 
     }
 
-    //fin de la partie
-    displayGrid(grid);
-    cout << "PARTIE TERMINEE !" << endl;
-    cout << "Votre score final est de : " << score << endl;
-
-    return 0;
-
-}
