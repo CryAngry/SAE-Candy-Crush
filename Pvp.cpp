@@ -15,17 +15,15 @@ struct maPosition {
     unsigned ord;
 };
 
-const unsigned KReset   (0);
-const unsigned KNoir    (30);
-const unsigned KRouge   (31);
-const unsigned KVert    (32);
-const unsigned KJaune   (33);
-const unsigned KBleu    (34);
-const unsigned KMAgenta (35);
-const unsigned KCyan    (36);
-
 const unsigned KNbCandies = 4;
 const unsigned KImpossible = 0;
+
+// Empêche les combos automatiques à l'initialisation
+bool combin(const mat & grid, size_t i, size_t j , unsigned val){
+    if (j >= 2 && grid[i][j-1] == val && grid[i][j-2] == val) return true;
+    if (i >= 2 && grid[i-1][j] == val && grid[i-2][j] == val) return true;
+    return false;
+}
 
 void clearScreen () {
     cout << "\033[H\033[2J";
@@ -40,7 +38,11 @@ void initGrid (mat & grid, const size_t & matSize) {
     for (size_t i = 0; i < matSize; ++i) {
         grid[i].resize(matSize);
         for (size_t j = 0; j < matSize; ++j) {
-            grid[i][j] = rand() % KNbCandies + 1;
+            unsigned val;
+            do {
+                val = rand() % KNbCandies + 1;
+            } while (combin(grid, i, j, val));
+            grid[i][j] = val;
         }
     }
 }
@@ -55,7 +57,7 @@ void displayGrid (const mat & grid) {
             if (grid[i][j] >= 1 && grid[i][j] <= KNbCandies) {
                 couleur(30 + grid[i][j]);
                 cout << grid[i][j] << " ";
-                couleur(KReset);
+                couleur(0);
             } else {
                 cout << "  ";
             }
@@ -188,7 +190,7 @@ int main() {
 
     while (nbCoups < NbCoupsMax) {
         displayGrid(grid);
-        cout << "Joueur " << joueur << " à toi de jouer !" << endl;
+        cout << "Joueur " << joueur << "C'est à ton tour" << endl;
         cout << "Score J1 : " << scoreJ1 << " | Score J2 : " << scoreJ2 << endl;
         cout << "Coups restants : " << NbCoupsMax - nbCoups << endl;
 
@@ -196,6 +198,12 @@ int main() {
         while (!coupValide) {
             cout << "Entrez Ligne (0-9), Colonne (0-9) et Direction (Z,S,Q,D) :" << endl;
             cin >> pos.ord >> pos.abs >> direction;
+
+            // Vérification des limites
+            if (pos.ord >= tailleGrille || pos.abs >= tailleGrille) {
+                cout << "Coordonnées hors grille !" << endl;
+                continue;
+            }
 
             if (makeAMove(grid, pos, direction)) {
                 coupValide = true;
@@ -226,7 +234,11 @@ int main() {
             }
         }
 
-        joueur = (joueur == 1 ? 2 : 1);
+        if (joueur == 1)
+            joueur = 2;
+        else
+            joueur = 1;
+
     }
 
     displayGrid(grid);
@@ -234,10 +246,10 @@ int main() {
     cout << "Score final J1 : " << scoreJ1 << endl;
     cout << "Score final J2 : " << scoreJ2 << endl;
 
-    // meilleur des deux pour le fichier
     unsigned scoreMax = (scoreJ1 > scoreJ2 ? scoreJ1 : scoreJ2);
     unsigned meilleurScore = lireMeilleurScore();
     cout << "Meilleur score actuel : " << meilleurScore << endl;
+
     if (scoreMax > meilleurScore) {
         enregistrerMeilleurScore(scoreMax);
         cout << "Nouveau meilleur score !" << endl;
