@@ -19,10 +19,14 @@ int jouer(mat & grid, const size_t tailleGrille);
 const unsigned KNbCandies = 4;
 const unsigned KImpossible = 0;
 
-// Empêche les combos automatiques à l'initialisation
-bool combin(const mat & grid, size_t i, size_t j , unsigned val){
-    if (j >= 2 && grid[i][j-1] == val && grid[i][j-2] == val) return true;
-    if (i >= 2 && grid[i-1][j] == val && grid[i-2][j] == val) return true;
+bool combin(const mat &grid, size_t i, size_t j, unsigned val){
+
+    if (j >= 2 && grid[i][j - 1] == val && grid[i][j - 2] == val)
+        return true;
+
+    if (i >= 2 && grid[i - 1][j] == val && grid[i - 2][j] == val)
+        return true;
+
     return false;
 }
 
