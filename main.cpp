@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
@@ -221,22 +222,27 @@ int main()
     const size_t tailleGrille = 8;
     initGrid(grid, tailleGrille);
 
-    const unsigned NbCoupsMax = 20; // Nombre de coups max
+    const unsigned NbCoupsMax = 20; 
     unsigned nbCoups = 0;
     unsigned score = 0;
 
     maPosition pos;
     char direction;
 
-    // Tant que coupmax non atteints
     while (nbCoups < NbCoupsMax)
     {
-        displayGrid(grid); // affiche la grille et menu
+        displayGrid(grid); 
         cout << "Score : " << score << endl;
         cout << "Coups restants : " << NbCoupsMax - nbCoups << endl;
-        cout << "Entrez Ligne (0-7), Colonne (0-7) et Direction (Z,Q,S,D) :" << endl;
+        cout << "Entrez Ligne (0-7), Colonne (0-7) et Direction (Z,Q,S,D) ou M pour Menu :" << endl;
 
-        cin >> pos.ord >> pos.abs >> direction;// saisit position et direction
+        string input;
+        cin >> input;
+
+        if (input == "M" || input == "m") return 0;
+
+        pos.ord = stoi(input);
+        cin >> pos.abs >> direction;
 
         if (pos.ord >= tailleGrille || pos.abs >= tailleGrille ||
             (direction != 'Z' && direction != 'S' && direction != 'Q' && direction != 'D'))
@@ -272,17 +278,21 @@ int main()
                     score += howMany;
                     suiteTrouvee = true;
                 }
+                
+                if (howMany > 3){
+                    cout << "Wow !" << endl;
+                }
             }
         }
         else
         {
             makeAMove(grid, pos, direction);
             ++nbCoups;
+            cout << "Mauvais coup !" << endl;
 
         }
     }
 
-    // fin de la partie
     displayGrid(grid);
     cout << "PARTIE TERMINEE !" << endl;
     cout << "Votre score final est de : " << score << endl;
@@ -290,4 +300,3 @@ int main()
     return 0;
 
 }
-
